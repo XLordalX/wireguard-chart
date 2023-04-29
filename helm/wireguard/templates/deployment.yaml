@@ -56,7 +56,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- range $key, $value := .Values.podAnnotations  }}
         {{ $key }}: {{ $value | quote }}
@@ -140,7 +139,7 @@ spec:
         emptyDir: {}
       - name: config
         secret:
-          secretName: {{ .Values.secret.name }}
+          secretName: {{ .Values.configSecret.name }}
           items:
             - key: {{ .Values.configSecret.key }}
               path: wg0.conf
