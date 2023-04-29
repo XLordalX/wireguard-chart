@@ -105,7 +105,7 @@ spec:
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           command: ["/bin/sh", "-c"]
           args:
-            - wg-quick up /etc/wireguard/wg0.conf
+            - wg-quick up /etc/wireguard/wg0.conf;
               sleep infinity
           ports:
           - containerPort: 51820
