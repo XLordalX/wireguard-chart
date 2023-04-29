@@ -1,6 +1,6 @@
 {{- define "execprobe" -}}
 exec:
-  command: 
+  command:
   - /bin/sh
   - -c
   - 'ip link show dev wg0 | grep -s up'
@@ -44,7 +44,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
     {{- end }}
-    
+
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -104,6 +104,10 @@ spec:
         - name: wireguard
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - wg-quick up /etc/wireguard/wg0.conf
+              sleep infinity
           ports:
           - containerPort: 51820
             protocol: UDP
@@ -130,17 +134,14 @@ spec:
           - name: run
             mountPath: /run
           - name: config
-            mountPath: /etc/wireguard/wg0.conf
-            subPath: wg0.conf
-          - name: privatekey
-            mountPath: /etc/wireguard/privatekey
-            subPath: privatekey
+            mountPath: /etc/wireguard
       volumes:
       - name: run
         emptyDir: {}
       - name: config
         secret:
-          secretName: "{{ .Release.Name }}-wg-config"
-      - name: privatekey
-        secret:
-          secretName: {{ coalesce .Values.secretName (printf "%s-wg-generated" .Release.Name) }}
+          secretName: {{ .Values.secret.name }}
+          items:
+            - key: {{ .Values.configSecret.key }}
+              path: wg0.conf
+

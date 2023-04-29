@@ -11,6 +11,7 @@ spec:
   - name: wg
     protocol: UDP
     port: {{ .Values.service.port }}
+    nodePort: {{ .Values.service.nodePort }}
     targetPort: 51820
   selector:
     app: "{{ .Release.Name }}-wireguard"

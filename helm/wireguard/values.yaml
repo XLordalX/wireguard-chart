@@ -24,6 +24,7 @@ service:
   type: LoadBalancer
   # -- Service port, default is 51280 UDP
   port: 51280
+  nodePort: 32222
 # -- Name of a secret with a wireguard private key on key privatekey, if not provided on first install a hook generates one.
 secretName: ~
 replicaCount: 3
@@ -50,3 +51,7 @@ autoscaling:
 # -- Provide additional environment variables to the wireguard container
 extraEnv: {}
 #  TEST_ENV_VAR: test-value
+
+configSecret:
+  name: common
+  key: WIREGUARD_CONF
